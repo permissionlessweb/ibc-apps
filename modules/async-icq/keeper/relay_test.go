@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"fmt"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/testing/simapp"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/testing/simapp"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 
 	storetypes "cosmossdk.io/store/types"
 
@@ -15,9 +15,9 @@ import (
 
 	abcitypes "github.com/cometbft/cometbft/abci/types"
 
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
-	ibctesting "github.com/cosmos/ibc-go/v8/testing"
+	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 )
 
 func (suite *KeeperTestSuite) TestOnRecvPacket() {

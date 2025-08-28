@@ -5,21 +5,22 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/relayer"
-	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	math "cosmossdk.io/math"
+	"github.com/strangelove-ventures/interchaintest/v10"
+	"github.com/strangelove-ventures/interchaintest/v10/chain/cosmos"
+	"github.com/strangelove-ventures/interchaintest/v10/ibc"
+	"github.com/strangelove-ventures/interchaintest/v10/relayer"
+	"github.com/strangelove-ventures/interchaintest/v10/testreporter"
+	"github.com/strangelove-ventures/interchaintest/v10/testutil"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 
-	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
-	ibccore "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
-	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
+	ibccore "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+	ibctm "github.com/cosmos/ibc-go/v10/modules/light-clients/07-tendermint"
 )
 
 func hostEncoding() *moduletestutil.TestEncodingConfig {
@@ -157,7 +158,7 @@ func TestInterchainQueries(t *testing.T) {
 	})
 
 	// Fund user accounts, so we can query balances and make assertions.
-	const userFunds = int64(10_000_000_000)
+	userFunds := math.NewIntFromUint64(uint64(10000000000))
 	users := interchaintest.GetAndFundTestUsers(t, ctx, t.Name(), userFunds, controllerChain, hostChain)
 	controllerUser := users[0]
 	hostUser := users[1]

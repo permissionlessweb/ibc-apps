@@ -1,12 +1,12 @@
 package types
 
 import (
-	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
-	ibcexported "github.com/cosmos/ibc-go/v3/modules/core/exported"
+	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
+	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
@@ -23,7 +23,13 @@ type BankKeeper interface {
 
 // ICS4Wrapper defines the expected ICS4Wrapper for middleware
 type ICS4Wrapper interface {
-	SendPacket(ctx sdk.Context, channelCap *capabilitytypes.Capability, packet ibcexported.PacketI) error
+	SendPacket(ctx sdk.Context,
+		sourcePort string,
+		sourceChannel string,
+		timeoutHeight clienttypes.Height,
+		timeoutTimestamp uint64,
+		data []byte,
+	) error
 }
 
 type ChannelKeeper interface {

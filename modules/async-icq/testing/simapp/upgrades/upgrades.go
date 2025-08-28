@@ -3,8 +3,8 @@ package upgrades
 import (
 	"context"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/keeper"
-	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/keeper"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 

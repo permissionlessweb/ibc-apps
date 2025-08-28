@@ -3,8 +3,8 @@ package interquery
 import (
 	"fmt"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/interchain-query-demo/x/interquery/keeper"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/interchain-query-demo/x/interquery/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/interchain-query-demo/x/interquery/keeper"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/interchain-query-demo/x/interquery/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

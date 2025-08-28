@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/interchain-query-demo/x/interquery/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/interchain-query-demo/x/interquery/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 

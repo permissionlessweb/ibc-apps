@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 
 	"cosmossdk.io/errors"
 

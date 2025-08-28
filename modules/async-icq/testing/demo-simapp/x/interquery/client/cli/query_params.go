@@ -3,7 +3,7 @@ package cli
 import (
 	"context"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/interchain-query-demo/x/interquery/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/interchain-query-demo/x/interquery/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"

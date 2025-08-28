@@ -3,8 +3,8 @@ package v2
 import (
 	"fmt"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/exported"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/exported"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 
 	storetypes "cosmossdk.io/store/types"
 

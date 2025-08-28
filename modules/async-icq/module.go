@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/client/cli"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/exported"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/keeper"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/client/cli"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/exported"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/keeper"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
@@ -21,7 +21,7 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
+	porttypes "github.com/cosmos/ibc-go/v10/modules/core/05-port/types"
 )
 
 var (
@@ -110,12 +110,6 @@ func (am AppModule) InitModule(ctx sdk.Context, params types.Params) {
 		panic(fmt.Sprintf("could not set params: %v", err))
 	}
 
-	if am.keeper.IsHostEnabled(ctx) {
-		err := am.keeper.BindPort(ctx, types.PortID)
-		if err != nil {
-			panic(fmt.Sprintf("could not claim port capability: %v", err))
-		}
-	}
 }
 
 // RegisterInvariants implements the AppModule interface
