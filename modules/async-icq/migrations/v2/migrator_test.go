@@ -3,10 +3,10 @@ package v2_test
 import (
 	"testing"
 
-	icq "github.com/cosmos/ibc-apps/modules/async-icq/v8"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/exported"
-	v2 "github.com/cosmos/ibc-apps/modules/async-icq/v8/migrations/v2"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	icq "github.com/cosmos/ibc-apps/modules/async-icq/v10"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/exported"
+	v2 "github.com/cosmos/ibc-apps/modules/async-icq/v10/migrations/v2"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 	"github.com/stretchr/testify/require"
 
 	storetypes "cosmossdk.io/store/types"

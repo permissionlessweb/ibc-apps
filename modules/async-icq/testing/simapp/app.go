@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 
 	dbm "github.com/cosmos/cosmos-db"
-	icq "github.com/cosmos/ibc-apps/modules/async-icq/v8"
-	icqkeeper "github.com/cosmos/ibc-apps/modules/async-icq/v8/keeper"
-	upgrades "github.com/cosmos/ibc-apps/modules/async-icq/v8/testing/simapp/upgrades"
-	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	icq "github.com/cosmos/ibc-apps/modules/async-icq/v10"
+	icqkeeper "github.com/cosmos/ibc-apps/modules/async-icq/v10/keeper"
+	upgrades "github.com/cosmos/ibc-apps/modules/async-icq/v10/testing/simapp/upgrades"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
@@ -100,13 +100,13 @@ import (
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	ibc "github.com/cosmos/ibc-go/v8/modules/core"
-	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
-	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
-	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
-	ibctesting "github.com/cosmos/ibc-go/v8/testing"
-	ibcmock "github.com/cosmos/ibc-go/v8/testing/mock"
-	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
+	ibc "github.com/cosmos/ibc-go/v10/modules/core"
+	porttypes "github.com/cosmos/ibc-go/v10/modules/core/05-port/types"
+	ibcexported "github.com/cosmos/ibc-go/v10/modules/core/exported"
+	ibckeeper "github.com/cosmos/ibc-go/v10/modules/core/keeper"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
+	ibcmock "github.com/cosmos/ibc-go/v10/testing/mock"
+	// ibctestingtypes "github.com/cosmos/ibc-go/v10/testing/types"
 )
 
 const appName = "SimApp"
@@ -275,7 +275,7 @@ func NewSimApp(
 
 	// NOTE: the IBC mock keeper and application module is used only for testing core IBC. Do
 	// not replicate if you do not need to test core IBC or light clients.
-	scopedIBCMockKeeper := app.CapabilityKeeper.ScopeToModule(ibcmock.ModuleName)
+	// scopedIBCMockKeeper := app.CapabilityKeeper.ScopeToModule(ibcmock.ModuleName)
 
 	// seal capability keeper after scoping modules
 	app.CapabilityKeeper.Seal()
@@ -338,10 +338,8 @@ func NewSimApp(
 	// IBC Keepers
 	app.IBCKeeper = ibckeeper.NewKeeper(
 		appCodec,
-		keys[ibcexported.StoreKey],
-		app.GetSubspace(ibcexported.ModuleName),
-		app.StakingKeeper, app.UpgradeKeeper,
-		scopedIBCKeeper,
+		runtime.NewKVStoreService(keys[ibcexported.StoreKey]),
+		app.GetSubspace(ibcexported.ModuleName), app.UpgradeKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
@@ -394,7 +392,6 @@ func NewSimApp(
 		keys[icqtypes.StoreKey],
 		app.IBCKeeper.ChannelKeeper, // may be replaced with middleware
 		app.IBCKeeper.ChannelKeeper,
-		app.IBCKeeper.PortKeeper,
 		scopedICQKeeper,
 		app.BaseApp.GRPCQueryRouter(),
 		authority,
@@ -408,10 +405,10 @@ func NewSimApp(
 	// Mock Module setup for testing IBC and also acts as the interchain accounts authentication module
 	// NOTE: the IBC mock keeper and application module is used only for testing core IBC. Do
 	// not replicate if you do not need to test core IBC or light clients.
-	mockModule := ibcmock.NewAppModule(app.IBCKeeper.PortKeeper)
+	mockModule := ibcmock.NewAppModule()
 
 	// The mock module is used for testing IBC
-	mockIBCModule := ibcmock.NewIBCModule(&mockModule, ibcmock.NewIBCApp(ibcmock.ModuleName, scopedIBCMockKeeper))
+	mockIBCModule := ibcmock.NewIBCModule(&mockModule, ibcmock.NewIBCApp(ibcmock.ModuleName))
 	ibcRouter.AddRoute(ibcmock.ModuleName, mockIBCModule)
 
 	// Create Interchain Query Stack
@@ -729,10 +726,10 @@ func (app *SimApp) GetBaseApp() *baseapp.BaseApp {
 	return app.BaseApp
 }
 
-// GetStakingKeeper implements the TestingApp interface.
-func (app *SimApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
-	return app.StakingKeeper
-}
+// // GetStakingKeeper implements the TestingApp interface.
+// func (app *SimApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+// 	return app.StakingKeeper
+// }
 
 // GetIBCKeeper implements the TestingApp interface.
 func (app *SimApp) GetIBCKeeper() *ibckeeper.Keeper {

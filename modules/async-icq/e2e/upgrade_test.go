@@ -3,16 +3,18 @@ package e2e
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
+	math "cosmossdk.io/math"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
-	cosmosproto "github.com/cosmos/gogoproto/proto"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/docker/docker/client"
-	"github.com/strangelove-ventures/interchaintest/v8"
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
-	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/strangelove-ventures/interchaintest/v10"
+	"github.com/strangelove-ventures/interchaintest/v10/chain/cosmos"
+	"github.com/strangelove-ventures/interchaintest/v10/ibc"
+	"github.com/strangelove-ventures/interchaintest/v10/testutil"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,8 +22,8 @@ const (
 	chainName   = "simapp"
 	upgradeName = "v3" // default handler, SDK v47 -> SDK v50.
 
-	haltHeightDelta    = uint64(9) // will propose upgrade this many blocks in the future
-	blocksAfterUpgrade = uint64(7)
+	haltHeightDelta    = int64(10) // will propose upgrade this many blocks in the future
+	blocksAfterUpgrade = int64(7)
 
 	VotingPeriod     = "15s"
 	MaxDepositPeriod = "10s"
@@ -91,7 +93,7 @@ func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeRepo, upgradeDockerT
 		ic.Close()
 	})
 
-	const userFunds = int64(10_000_000_000)
+	userFunds := math.NewInt(10000000000)
 	users := interchaintest.GetAndFundTestUsers(t, ctx, t.Name(), userFunds, chain)
 	chainUser := users[0]
 
@@ -101,15 +103,15 @@ func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeRepo, upgradeDockerT
 
 	haltHeight := height + haltHeightDelta
 	proposalID := SubmitUpgradeProposal(t, ctx, chain, chainUser, upgradeName, haltHeight)
-
-	ValidatorVoting(t, ctx, chain, proposalID, height, haltHeight)
+	proposalIDInt, err := strconv.ParseInt(proposalID, 10, 64)
+	ValidatorVoting(t, ctx, chain, proposalIDInt, height, haltHeight)
 	UpgradeNodes(t, ctx, chain, client, haltHeight, upgradeRepo, upgradeDockerTag)
 }
 
-func SubmitUpgradeProposal(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, user ibc.Wallet, upgradeName string, haltHeight uint64) string {
-	upgradeMsg := []cosmosproto.Message{
+func SubmitUpgradeProposal(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, user ibc.Wallet, upgradeName string, haltHeight int64) string {
+	upgradeMsg := []cosmos.ProtoMessage{
 		&upgradetypes.MsgSoftwareUpgrade{
-			// Gov Module account
+			// gov Module account
 			Authority: "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
 			Plan: upgradetypes.Plan{
 				Name:   upgradeName,
@@ -130,7 +132,7 @@ func SubmitUpgradeProposal(t *testing.T, ctx context.Context, chain *cosmos.Cosm
 	return txProp.ProposalID
 }
 
-func UpgradeNodes(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, client *client.Client, haltHeight uint64, upgradeRepo, upgradeBranchVersion string) {
+func UpgradeNodes(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, client *client.Client, haltHeight int64, upgradeRepo, upgradeBranchVersion string) {
 	// bring down nodes to prepare for upgrade
 	t.Log("stopping node(s)")
 	err := chain.StopAllNodes(ctx)
@@ -159,11 +161,11 @@ func UpgradeNodes(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, 
 	require.GreaterOrEqual(t, height, haltHeight+blocksAfterUpgrade, "height did not increment enough after upgrade")
 }
 
-func ValidatorVoting(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, proposalID string, height uint64, haltHeight uint64) {
-	err := chain.VoteOnProposalAllValidators(ctx, proposalID, cosmos.ProposalVoteYes)
+func ValidatorVoting(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, proposalID int64, height int64, haltHeight int64) {
+	err := chain.VoteOnProposalAllValidators(ctx, uint64(proposalID), cosmos.ProposalVoteYes)
 	require.NoError(t, err, "failed to submit votes")
 
-	_, err = cosmos.PollForProposalStatusV8(ctx, chain, height, height+haltHeightDelta, proposalID, cosmos.ProposalStatusPassedV8)
+	_, err = cosmos.PollForProposalStatus(ctx, chain, height, height+haltHeightDelta, uint64(proposalID), govtypes.StatusPassed)
 	require.NoError(t, err, "proposal status did not change to passed in expected number of blocks")
 
 	timeoutCtx, timeoutCtxCancel := context.WithTimeout(ctx, time.Second*45)

@@ -1,7 +1,7 @@
 package types
 
 import (
-	icqtypes "github.com/cosmos/ibc-go/v3/modules/apps/icq/types"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 )
 
 const (

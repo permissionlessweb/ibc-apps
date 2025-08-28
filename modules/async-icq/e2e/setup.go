@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
-	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/strangelove-ventures/interchaintest/v10/chain/cosmos"
+	"github.com/strangelove-ventures/interchaintest/v10/ibc"
 
 	testutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 )

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	dbm "github.com/cosmos/cosmos-db"
-	app "github.com/cosmos/ibc-apps/modules/async-icq/v8/testing/simapp"
+	app "github.com/cosmos/ibc-apps/modules/async-icq/v10/testing/simapp"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
@@ -18,7 +18,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/client/pruning"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/server"
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -87,7 +86,7 @@ func NewRootCmd() (*cobra.Command, app.EncodingConfig) {
 	initRootCmd(rootCmd, encodingConfig, tempApp)
 
 	autoCliOpts := tempApp.AutoCliOpts()
-	autoCliOpts.Keyring, _ = keyring.NewAutoCLIKeyring(initClientCtx.Keyring)
+	// autoCliOpts.Keyring, _ = keyring.NewAutoCLIKeyring(initClientCtx.Keyring)
 	autoCliOpts.ClientCtx = initClientCtx
 
 	if err := autoCliOpts.EnhanceRootCommand(rootCmd); err != nil {

@@ -3,12 +3,12 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/testing/simapp"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/testing/simapp"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 	"github.com/stretchr/testify/suite"
 
-	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
-	ibctesting "github.com/cosmos/ibc-go/v8/testing"
+	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 )
 
 var TestPort = "icq-test"
@@ -75,6 +75,4 @@ func (suite *KeeperTestSuite) TestIsBound() {
 	err := SetupICQPath(path)
 	suite.Require().NoError(err)
 
-	isBound := simapp.GetSimApp(suite.chainB).ICQKeeper.IsBound(suite.chainB.GetContext(), path.EndpointB.ChannelConfig.PortID)
-	suite.Require().True(isBound)
 }

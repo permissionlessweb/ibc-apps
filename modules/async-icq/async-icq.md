@@ -1,0 +1,2 @@
+- removed ChannelCapabilityPath checks, as per: https://github.com/cosmos/ibc-go/pull/7239
+- removed BindPort https://github.com/cosmos/ibc-go/pull/7239

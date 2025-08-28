@@ -3,7 +3,7 @@ package types
 import (
 	"testing"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/interchain-query-demo/testutil/sample"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/interchain-query-demo/testutil/sample"
 	"github.com/stretchr/testify/require"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

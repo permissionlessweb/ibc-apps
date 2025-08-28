@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/cosmos/gogoproto/proto"
-	icq "github.com/cosmos/ibc-apps/modules/async-icq/v8"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/testing/simapp"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	icq "github.com/cosmos/ibc-apps/modules/async-icq/v10"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/testing/simapp"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,10 +16,10 @@ import (
 	tmstate "github.com/cometbft/cometbft/state"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
-	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
-	ibctesting "github.com/cosmos/ibc-go/v8/testing"
+	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
+	host "github.com/cosmos/ibc-go/v10/modules/core/24-host"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 )
 
 var (
@@ -118,12 +118,6 @@ func (suite *InterchainQueriesTestSuite) TestOnChanOpenInit() {
 				channel.Version = version
 			}, false,
 		},
-		{
-			"capability already claimed", func() {
-				err := simapp.GetSimApp(suite.chainA).ScopedICQKeeper.ClaimCapability(suite.chainA.GetContext(), chanCap, host.ChannelCapabilityPath(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID))
-				suite.Require().NoError(err)
-			}, false,
-		},
 	}
 
 	for _, tc := range testCases {
@@ -145,14 +139,14 @@ func (suite *InterchainQueriesTestSuite) TestOnChanOpenInit() {
 			}
 
 			var err error
-			chanCap, err = suite.chainA.App.GetScopedIBCKeeper().NewCapability(suite.chainA.GetContext(), host.ChannelCapabilityPath(types.PortID, path.EndpointA.ChannelID))
-			suite.Require().NoError(err)
+			// chanCap, err = suite.chainA.App.GetScopedIBCKeeper().NewCapability(suite.chainA.GetContext(), host.ChannelCapabilityPath(types.PortID, path.EndpointA.ChannelID))
+			// suite.Require().NoError(err)
 
 			tc.malleate() // explicitly change fields in channel and testChannel
 
 			icqModule := icq.NewIBCModule(simapp.GetSimApp(suite.chainA).ICQKeeper)
-			version, err := icqModule.OnChanOpenInit(suite.chainA.GetContext(), channel.Ordering, channel.GetConnectionHops(),
-				path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, chanCap, counterparty, channel.GetVersion(),
+			version, err := icqModule.OnChanOpenInit(suite.chainA.GetContext(), channel.Ordering, channel.ConnectionHops,
+				path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, chanCap, counterparty, channel.Version,
 			)
 
 			if tc.expPass {

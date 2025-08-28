@@ -3,19 +3,20 @@ package icq
 import (
 	"strings"
 
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/keeper"
-	"github.com/cosmos/ibc-apps/modules/async-icq/v8/types"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/keeper"
+	"github.com/cosmos/ibc-apps/modules/async-icq/v10/types"
 
 	"cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
-	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
-	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
+	porttypes "github.com/cosmos/ibc-go/v10/modules/core/05-port/types"
+	ibcexported "github.com/cosmos/ibc-go/v10/modules/core/exported"
 )
+
+var _ porttypes.IBCModule = &IBCModule{}
 
 // IBCModule implements the ICS26 interface for interchain query host chains
 type IBCModule struct {
@@ -36,7 +37,6 @@ func (im IBCModule) OnChanOpenInit(
 	_ []string,
 	portID string,
 	channelID string,
-	chanCap *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
 	version string,
 ) (string, error) {
@@ -57,9 +57,9 @@ func (im IBCModule) OnChanOpenInit(
 	}
 
 	// Claim channel capability passed back by IBC module
-	if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-		return "", err
-	}
+	// if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
+	// 	return "", err
+	// }
 
 	return version, nil
 }
@@ -89,7 +89,6 @@ func (im IBCModule) OnChanOpenTry(
 	_ []string,
 	portID,
 	channelID string,
-	chanCap *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
 	counterpartyVersion string,
 ) (string, error) {
@@ -109,12 +108,12 @@ func (im IBCModule) OnChanOpenTry(
 	// (ie chainA and chainB both call ChanOpenInit before one of them calls ChanOpenTry)
 	// If module can already authenticate the capability then module already owns it so we don't need to claim
 	// Otherwise, module does not have channel capability and we must claim it from IBC
-	if !im.keeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)) {
-		// Only claim channel capability passed back by IBC module if we do not already own it
-		if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-			return "", err
-		}
-	}
+	// if !im.keeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)) {
+	// 	// Only claim channel capability passed back by IBC module if we do not already own it
+	// 	if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
+	// 		return "", err
+	// 	}
+	// }
 
 	return types.Version, nil
 }
@@ -171,6 +170,7 @@ func (im IBCModule) OnChanCloseConfirm(
 // OnRecvPacket implements the IBCModule interface
 func (im IBCModule) OnRecvPacket(
 	ctx sdk.Context,
+	channelVersion string,
 	packet channeltypes.Packet,
 	_ sdk.AccAddress,
 ) ibcexported.Acknowledgement {
@@ -193,6 +193,7 @@ func (im IBCModule) OnRecvPacket(
 // OnAcknowledgementPacket implements the IBCModule interface
 func (im IBCModule) OnAcknowledgementPacket(
 	_ sdk.Context,
+	_ string,
 	_ channeltypes.Packet,
 	_ []byte,
 	_ sdk.AccAddress,
@@ -203,6 +204,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 // OnTimeoutPacket implements the IBCModule interface
 func (im IBCModule) OnTimeoutPacket(
 	_ sdk.Context,
+	channelVersion string,
 	_ channeltypes.Packet,
 	_ sdk.AccAddress,
 ) error {

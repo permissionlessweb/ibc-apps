@@ -6,7 +6,7 @@ import "icq/v1/icq.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/cosmos/ibc-apps/modules/async-icq/v8/types";
+option go_package = "github.com/cosmos/ibc-apps/modules/async-icq/v10/types";
 
 // Msg defines the Msg service.
 service Msg {
