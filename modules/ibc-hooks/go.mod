@@ -9,7 +9,6 @@ require (
 	cosmossdk.io/errors v1.1.0
 	cosmossdk.io/log/v2 v2.1.0
 	cosmossdk.io/math v1.5.3
-	cosmossdk.io/store v1.1.2
 	github.com/CosmWasm/wasmd v0.70.2
 	github.com/cometbft/cometbft v0.39.3
 	github.com/cosmos/cosmos-db v1.1.3
