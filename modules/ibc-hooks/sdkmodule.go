@@ -16,8 +16,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
-	"github.com/cosmos/ibc-apps/modules/ibc-hooks/v11/client/cli"
-	"github.com/cosmos/ibc-apps/modules/ibc-hooks/v11/types"
+	"github.com/permissionlessweb/ibc-apps/modules/ibc-hooks/v11/client/cli"
+	"github.com/permissionlessweb/ibc-apps/modules/ibc-hooks/v11/types"
 )
 
 var (

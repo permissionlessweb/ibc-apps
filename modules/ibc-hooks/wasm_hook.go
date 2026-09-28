@@ -11,8 +11,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/ibc-apps/modules/ibc-hooks/v11/keeper"
-	"github.com/cosmos/ibc-apps/modules/ibc-hooks/v11/types"
+	"github.com/permissionlessweb/ibc-apps/modules/ibc-hooks/v11/keeper"
+	"github.com/permissionlessweb/ibc-apps/modules/ibc-hooks/v11/types"
 	transfertypes "github.com/cosmos/ibc-go/v11/modules/apps/transfer/types"
 	ibcclienttypes "github.com/cosmos/ibc-go/v11/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v11/modules/core/04-channel/types"

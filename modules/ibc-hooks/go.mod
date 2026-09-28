@@ -1,4 +1,4 @@
-module github.com/cosmos/ibc-apps/modules/ibc-hooks/v11
+module github.com/permissionlessweb/ibc-apps/modules/ibc-hooks/v11
 
 go 1.25.9
 
